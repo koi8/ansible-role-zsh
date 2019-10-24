@@ -57,9 +57,13 @@ zsh_antigen_bundles:
   - "{{ fzf_widgets }}"
   # must be last, don't work on zsh < 4.3.17
   #- { name: zsh-users/zsh-syntax-highlighting, when: "{{ zsh_version | default(false) | version_compare('4.3.17', '>=') }}" }
-  - { name: zdharma/fast-syntax-highlighting, when: "{{ zsh_version | default(false) | version_compare('4.3.17', '>=') }}" }
+  # bug with text paste in fast-syntax-highlighting v1.21, see https://github.com/zdharma/fast-syntax-highlighting/issues/30
+  - { name: zdharma/fast-syntax-highlighting@v1.2, when: "{{ zsh_version | default(false) | version_compare('4.3.17', '>=') }}" }
 
 zsh_antigen_bundles_extras: []
+
+# useful for deploy many zsh users at host, without duplicate and without write access
+zsh_shared: no
 
 zsh_antigen_theme: "bhilburn/powerlevel9k powerlevel9k"
 
@@ -110,6 +114,14 @@ zsh_hotkeys:
   - { hotkey: '{{ zsh_autosuggestions_bind_key_2 }}', action: autosuggest-accept, bundle: zsh-users/zsh-autosuggestions }
 
 zsh_hotkeys_extras: []
+
+# only single quotes allowed in action
+zsh_aliases:
+  - { alias: 'apt-update-list-upgrade', action: 'apt update && apt upgrade --dry-run | grep Inst | sort | fzf && apt upgrade' }
+  - { alias: 'dfh',                     action: 'df -h | grep -v docker' }
+  - { alias: 'ubuntu-release',          action: 'lsb_release -a' }
+  - { alias: '', action: '' }
+
 
 # zsh-autosuggestions
 zsh_autosuggestions_max_length: 15
